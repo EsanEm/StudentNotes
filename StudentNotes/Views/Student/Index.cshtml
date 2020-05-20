@@ -1,0 +1,15 @@
+﻿@model IEnumerable<StudentNotes.Models.Student>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+@foreach (var student in Model)
+{
+    
+    @Html.ActionLink(student.Name, "Details", "Student", new { id = student.Id }, null)
+}
+
