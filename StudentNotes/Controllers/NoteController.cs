@@ -10,11 +10,7 @@ namespace StudentNotes.Controllers
 {
     public class NoteController : Controller
     {
-        // GET: Note
-        //  public ActionResult Index()
-        //  {
-        //       return View();
-        //  }
+        
 
         private ApplicationDbContext _context;
 
@@ -30,6 +26,51 @@ namespace StudentNotes.Controllers
 
             return View(note);
             //   throw new NotImplementedException();
+        }
+
+        public ActionResult Save(Note note)
+        {
+
+            //note.StudentId = 2;
+
+            if (note.Id == 0)
+            {
+                
+                _context.Notes.Add(note);
+            }
+
+            else
+            {
+                var noteInDb = _context.Notes.Single(n => n.Id == note.Id);
+                noteInDb.Name = note.Name;
+                noteInDb.ProgressRating = note.ProgressRating;
+                noteInDb.ExtraNote = note.ExtraNote;
+                noteInDb.StudentId = note.StudentId;
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Student");
+           
+        }
+
+        public ActionResult New(int studentId)
+        {
+
+           
+            return View("Details");
+        }
+
+
+
+        public void Delete(int id)
+        {
+
+            var noteInDb = _context.Notes.Single(n => n.Id == id);
+
+
+            _context.Notes.Remove(noteInDb);
+            _context.SaveChanges();
         }
     }
 }

@@ -8,12 +8,15 @@
 <h2>@Model.Name</h2>
 <h2>@Model.Address</h2>
 <h2>@Model.Phone</h2>
-<h2>@Model.Notes</h2>
+
+@Html.ActionLink("New Note", "New", "Note", new { studentId = Model.Id }, null)
+
+
 
 @foreach (var notes in Model.Notes)
 {
-    <p>@notes.Name</p> 
-       @Html.ActionLink(notes.Name, "Details", "Note", new { id = notes.Id }, null)
+  <p>@notes.Name</p> 
+       @Html.ActionLink(notes.Name, "Details", "Note", new { id = notes.Id, studentId = notes.StudentId }, null)
     <p>@notes.ProgressRating</p>
     <p>@notes.ExtraNote</p>
 }
