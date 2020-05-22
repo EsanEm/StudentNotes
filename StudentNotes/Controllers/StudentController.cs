@@ -11,7 +11,6 @@ namespace StudentNotes.Controllers
 {
     public class StudentController : Controller
     {
-
         private ApplicationDbContext _context;
 
         public StudentController()
@@ -20,15 +19,16 @@ namespace StudentNotes.Controllers
         }
 
 
-        // GET: Student
+        
         public ActionResult Index()
         {
-
             var student = _context.Students.ToList();
 
 
             return View(student);
         }
+
+
 
         public ActionResult Details(int id)
         {
@@ -42,16 +42,26 @@ namespace StudentNotes.Controllers
             return View(student);
         }
 
+        
+        
+        
         public ActionResult New()
         {
-            throw new NotImplementedException();
+             
         }
 
-        public ActionResult Delete(int studentid)
-        {
-            var studentInDb = _context.Students.Single(n => n.Id == studentid);
 
-           // var noteInDbStudentId = noteInDb.StudentId;
+
+
+        public ActionResult Delete(int studentId)
+        {
+            var studentInDb = _context.Students.Single(n => n.Id == studentId);
+            var studentNotesInDb = _context.Notes.ToList().Where(n => n.StudentId == studentInDb.Id);
+
+            foreach (var note in studentNotesInDb)
+            {
+                _context.Notes.Remove(note);
+            }
 
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
