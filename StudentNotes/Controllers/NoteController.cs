@@ -25,17 +25,17 @@ namespace StudentNotes.Controllers
             var note = _context.Notes.SingleOrDefault(n => n.Id == id);
 
             return View(note);
-            //   throw new NotImplementedException();
+           
         }
 
         public ActionResult Save(Note note)
         {
 
-            //note.StudentId = 2;
-
+           
             if (note.Id == 0)
             {
                 
+                note.DateAdded = DateTime.Now;
                 _context.Notes.Add(note);
             }
 
@@ -46,6 +46,7 @@ namespace StudentNotes.Controllers
                 noteInDb.ProgressRating = note.ProgressRating;
                 noteInDb.ExtraNote = note.ExtraNote;
                 noteInDb.StudentId = note.StudentId;
+                noteInDb.DateAdded = DateTime.Now;
             }
 
             _context.SaveChanges();
@@ -63,14 +64,18 @@ namespace StudentNotes.Controllers
 
 
 
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
 
             var noteInDb = _context.Notes.Single(n => n.Id == id);
 
+            var noteInDbStudentId = noteInDb.StudentId;
 
             _context.Notes.Remove(noteInDb);
             _context.SaveChanges();
+
+            return RedirectToAction("Details" + "/" + noteInDbStudentId, "Student");
+
         }
     }
 }

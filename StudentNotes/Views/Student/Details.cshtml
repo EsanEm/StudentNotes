@@ -6,18 +6,40 @@
 }
 
 <h2>@Model.Name</h2>
-<h2>@Model.Address</h2>
-<h2>@Model.Phone</h2>
-
-@Html.ActionLink("New Note", "New", "Note", new { studentId = Model.Id }, null)
 
 
+@Html.ActionLink("New Note", "New", "Note", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
+@Html.ActionLink("DELETE STUDENT", "Delete", "Student", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
 
-@foreach (var notes in Model.Notes)
-{
-  <p>@notes.Name</p> 
-       @Html.ActionLink(notes.Name, "Details", "Note", new { id = notes.Id, studentId = notes.StudentId }, null)
-    <p>@notes.ProgressRating</p>
-    <p>@notes.ExtraNote</p>
-}
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Note</th>
+            <th>Progress Rating</th>
+            <th>Extra Note</th>
+            <th>Date Added</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var notes in Model.Notes)
+        {
+
+            <tr>
+                <td>@Html.ActionLink(notes.Name, "Details", "Note", new { id = notes.Id, studentId = notes.StudentId }, null)</td>
+                <td>@notes.ProgressRating</td>
+                <td>@notes.ExtraNote</td>
+                <td>@notes.DateAdded.ToShortDateString()</td>
+            </tr>
+
+        }
+
+
+    </tbody>
+
+
+
+</table>
+
 

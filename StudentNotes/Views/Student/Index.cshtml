@@ -5,11 +5,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>List of Students</h2>
+@Html.ActionLink("New Student", "New", "Student", new { }, new { @class = "btn btn-primary" })
 
-@foreach (var student in Model)
+@if (!Model.Any())
 {
-    
-    @Html.ActionLink(student.Name, "Details", "Student", new { id = student.Id }, null)
+    <p>You don't have any students yet.</p>
 }
+
+else
+{
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(student.Name, "Details", "Student", new { id = student.Id }, null)</td>
+                    <td>@student.Address</td>
+                    <td>@student.Phone</td>
+                </tr>
+
+
+
+            }
+
+        </tbody>
+
+    </table>
+}
+
+
+
+
+
 

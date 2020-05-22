@@ -24,9 +24,7 @@ namespace StudentNotes.Controllers
         public ActionResult Index()
         {
 
-            var student = _context.Students
-              // .Include(s => s.Notes)
-                .ToList();
+            var student = _context.Students.ToList();
 
 
             return View(student);
@@ -42,6 +40,23 @@ namespace StudentNotes.Controllers
                 return HttpNotFound();
 
             return View(student);
+        }
+
+        public ActionResult New()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult Delete(int studentid)
+        {
+            var studentInDb = _context.Students.Single(n => n.Id == studentid);
+
+           // var noteInDbStudentId = noteInDb.StudentId;
+
+            _context.Students.Remove(studentInDb);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Student");
         }
     }
 }

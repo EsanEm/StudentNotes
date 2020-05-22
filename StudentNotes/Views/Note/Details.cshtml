@@ -5,31 +5,43 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
+@if (Model == null)
+{
+    <h2>New Note</h2>
+}
+else
+{
+    <h2>Note Details</h2>
+}
 
 
 @using (Html.BeginForm("Save", "Note"))
 {
     <div class="form-group">
         @Html.LabelFor(n => n.Name)
-        @Html.TextAreaFor(n => n.Name)
+        @Html.TextAreaFor(n => n.Name, new { @class = "form-control"})
     </div>
 
     <div class="form-group">
         @Html.LabelFor(n => n.ProgressRating)
-        @Html.TextAreaFor(n => n.ProgressRating)
+        @Html.TextAreaFor(n => n.ProgressRating, new { @class = "form-control" })
     </div>
 
     <div class="form-group">
         @Html.LabelFor(n => n.ExtraNote)
-        @Html.TextAreaFor(n => n.ExtraNote)
+        @Html.TextAreaFor(n => n.ExtraNote, new { @class = "form-control" })
     </div>
     @Html.HiddenFor(n => Model.Id)
     @Html.HiddenFor(s => Model.StudentId)
     <button type="submit" class="btn btn-primary">Save</button>
-    @Html.ActionLink("Delete", "Delete", "Note", new { id = Model.Id }, null)
+    if (Model == null)
+    {
 
+    }
+    else
+    {
+        @Html.ActionLink("Delete", "Delete", "Note", new { id = Model.Id }, new { @class = "btn btn-primary"})
+    }
 
 
 }

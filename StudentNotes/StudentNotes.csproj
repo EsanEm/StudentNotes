@@ -192,6 +192,14 @@
     <Compile Include="Migrations\202005200209319_AddNote1.designer.cs">
       <DependentUpon>202005200209319_AddNote1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005220056560_AddedRequiredToClasses.cs" />
+    <Compile Include="Migrations\202005220056560_AddedRequiredToClasses.designer.cs">
+      <DependentUpon>202005220056560_AddedRequiredToClasses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005220119202_AddDateAddedToNote.cs" />
+    <Compile Include="Migrations\202005220119202_AddDateAddedToNote.designer.cs">
+      <DependentUpon>202005220119202_AddDateAddedToNote.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -289,6 +297,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005200209319_AddNote1.resx">
       <DependentUpon>202005200209319_AddNote1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005220056560_AddedRequiredToClasses.resx">
+      <DependentUpon>202005220056560_AddedRequiredToClasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005220119202_AddDateAddedToNote.resx">
+      <DependentUpon>202005220119202_AddDateAddedToNote.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
