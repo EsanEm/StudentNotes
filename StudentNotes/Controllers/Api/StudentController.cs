@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Configuration;
 using System.Web.Http;
+using AutoMapper;
+using StudentNotes.Dtos;
 using StudentNotes.Models;
 
 namespace StudentNotes.Controllers.Api
@@ -22,44 +24,47 @@ namespace StudentNotes.Controllers.Api
 
 
         // GET   /api/student
-        public IEnumerable<Student> GetStudents()
+        public IEnumerable<StudentDto> GetStudents()
         {
-            return _context.Students.ToList();
+            return _context.Students.ToList().Select(Mapper.Map<Student, StudentDto>);
         }
 
 
         // GET   /api/student/id
-        public Student GetStudent(int id)
+        public StudentDto GetStudent(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return student;
+            return  Mapper.Map<Student, StudentDto>(student);
 
 
         }
 
         // POST    /api/student
         [HttpPost]
-        public Student CreateStudent(Student student)
+        public StudentDto CreateStudent(StudentDto studentDto)
         {
 
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
+            var student = Mapper.Map<StudentDto, Student>(studentDto);
             _context.Students.Add(student);
             _context.SaveChanges();
 
-            return student;
+            studentDto.Id = student.Id;
+
+            return studentDto;
 
         }
 
 
         // PUT     /api/student/id
         [HttpPut]
-        public void UpdateStudent(int id, Student student)
+        public void UpdateStudent(int id, StudentDto studentDto)
         {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -69,9 +74,8 @@ namespace StudentNotes.Controllers.Api
             if (studentInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            studentInDb.Name = student.Name;
-            studentInDb.Address = student.Address;
-            studentInDb.Phone = student.Phone;
+            Mapper.Map<StudentDto, Student>(studentDto, studentInDb);
+            
 
             _context.SaveChanges();
 
