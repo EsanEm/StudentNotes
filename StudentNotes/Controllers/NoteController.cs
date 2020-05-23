@@ -10,13 +10,16 @@ namespace StudentNotes.Controllers
 {
     public class NoteController : Controller
     {
-        
-
         private ApplicationDbContext _context;
 
         public NoteController()
         {
             _context = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
         }
 
 
@@ -25,16 +28,12 @@ namespace StudentNotes.Controllers
             var note = _context.Notes.SingleOrDefault(n => n.Id == id);
 
             return View(note);
-           
         }
 
         public ActionResult Save(Note note)
         {
-
-           
             if (note.Id == 0)
             {
-                
                 note.DateAdded = DateTime.Now;
                 _context.Notes.Add(note);
             }
@@ -51,22 +50,17 @@ namespace StudentNotes.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Student");
-           
+            return RedirectToAction("Details" + "/" + note.StudentId, "Student");
         }
 
         public ActionResult New(int studentId)
         {
-
-           
             return View("Details");
         }
 
 
-
         public ActionResult Delete(int id)
         {
-
             var noteInDb = _context.Notes.Single(n => n.Id == id);
 
             var noteInDbStudentId = noteInDb.StudentId;
@@ -75,7 +69,6 @@ namespace StudentNotes.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Details" + "/" + noteInDbStudentId, "Student");
-
         }
     }
 }

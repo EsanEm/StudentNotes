@@ -18,15 +18,18 @@ namespace StudentNotes.Controllers
             _context = new ApplicationDbContext();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
 
         public ActionResult Index()
         {
             var student = _context.Students.ToList();
-
-
+    
             return View(student);
         }
-
 
 
         public ActionResult Details(int id)
@@ -42,32 +45,21 @@ namespace StudentNotes.Controllers
         }
 
 
-
-
-
-
-
         public ActionResult New()
         {
-
             return View("New");
         }
-         
-
-
 
 
         public ActionResult Delete(int studentId)
         {
-            var studentInDb = _context.Students.Single(n => n.Id == studentId);
+            var studentInDb = _context.Students.Single(s => s.Id == studentId);
             var studentNotesInDb = _context.Notes.ToList().Where(n => n.StudentId == studentInDb.Id);
 
             foreach (var note in studentNotesInDb)
             {
                 _context.Notes.Remove(note);
             }
-
-
 
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
@@ -76,12 +68,8 @@ namespace StudentNotes.Controllers
         }
 
 
-
-
-
         public ActionResult Save(Student student)
         {
-
             if (student.Id == 0)
             {
                 _context.Students.Add(student);
@@ -93,21 +81,17 @@ namespace StudentNotes.Controllers
                 studentInDb.Name = student.Name;
                 studentInDb.Address = student.Address;
                 studentInDb.Phone = student.Phone;
-               
             }
 
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Student");
-
-
-
         }
 
         public ActionResult Edit(int studentId)
         {
-            var studentInDb = _context.Students.Single(n => n.Id == studentId);
-            
+            var studentInDb = _context.Students.Single(s => s.Id == studentId);
+
             return View(studentInDb);
         }
     }

@@ -20,10 +20,9 @@ namespace StudentNotes.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-
         public DbSet<Student> Students { get; set; }
 
-        public DbSet<Note> Notes { get; set; }  
+        public DbSet<Note> Notes { get; set; }
 
 
         public ApplicationDbContext()

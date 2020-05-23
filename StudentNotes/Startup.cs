@@ -2,6 +2,7 @@
 using Owin;
 
 [assembly: OwinStartupAttribute(typeof(StudentNotes.Startup))]
+
 namespace StudentNotes
 {
     public partial class Startup

@@ -6,40 +6,43 @@
 }
 
 <h2>@Model.Name</h2>
+<p>Address: @Model.Address</p>
+<p>Phone: @Model.Phone</p>
 
 
-@Html.ActionLink("New Note", "New", "Note", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
-@Html.ActionLink("Edit Student", "Edit", "Student", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
-@Html.ActionLink("DELETE STUDENT", "Delete", "Student", new { studentId = Model.Id }, new { @class = "btn btn-primary" })
+@Html.ActionLink("New Note", "New", "Note", new {studentId = Model.Id}, new {@class = "btn btn-primary"})
+@Html.ActionLink("Edit Student", "Edit", "Student", new {studentId = Model.Id}, new {@class = "btn btn-primary"})
+@Html.ActionLink("DELETE STUDENT", "Delete", "Student", new {studentId = Model.Id}, new {@class = "btn btn-primary"})
 
 <table class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th>Note</th>
-            <th>Progress Rating</th>
-            <th>Extra Note</th>
-            <th>Date Added</th>
-        </tr>
+    <tr>
+        <th>Note</th>
+        <th>Progress Rating</th>
+        <th>Extra Note</th>
+        <th>Date Added</th>
+    </tr>
 
     </thead>
     <tbody>
-        @foreach (var notes in Model.Notes)
-        {
+    
+    @if (!Model.Notes.Any())
+    {
+        <p>You don't have any notes for this student yet.</p>
+    }
 
-            <tr>
-                <td>@Html.ActionLink(notes.Name, "Details", "Note", new { id = notes.Id, studentId = notes.StudentId }, null)</td>
-                <td>@notes.ProgressRating</td>
-                <td>@notes.ExtraNote</td>
-                <td>@notes.DateAdded.ToShortDateString()</td>
-            </tr>
-
-        }
+    @foreach (var notes in Model.Notes)
+    {
+        <tr>
+            <td>@Html.ActionLink(notes.Name, "Details", "Note", new {id = notes.Id, studentId = notes.StudentId}, null)</td>
+            <td>@notes.ProgressRating</td>
+            <td>@notes.ExtraNote</td>
+            <td>@notes.DateAdded.ToShortDateString()</td>
+        </tr>
+    }
 
 
     </tbody>
 
 
-
 </table>
-
-
