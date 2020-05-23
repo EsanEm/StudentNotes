@@ -19,7 +19,6 @@ namespace StudentNotes.Controllers
         }
 
 
-        
         public ActionResult Index()
         {
             var student = _context.Students.ToList();
@@ -33,7 +32,7 @@ namespace StudentNotes.Controllers
         public ActionResult Details(int id)
         {
             var student = _context.Students
-                .Include(c => c.Notes)
+                .Include(s => s.Notes)
                 .SingleOrDefault(s => s.Id == id);
 
             if (student == null)
@@ -42,13 +41,18 @@ namespace StudentNotes.Controllers
             return View(student);
         }
 
-        
-        
-        
+
+
+
+
+
+
         public ActionResult New()
         {
-             
+
+            return View("New");
         }
+         
 
 
 
@@ -63,10 +67,48 @@ namespace StudentNotes.Controllers
                 _context.Notes.Remove(note);
             }
 
+
+
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Student");
+        }
+
+
+
+
+
+        public ActionResult Save(Student student)
+        {
+
+            if (student.Id == 0)
+            {
+                _context.Students.Add(student);
+            }
+
+            else
+            {
+                var studentInDb = _context.Students.Single(s => s.Id == student.Id);
+                studentInDb.Name = student.Name;
+                studentInDb.Address = student.Address;
+                studentInDb.Phone = student.Phone;
+               
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Student");
+
+
+
+        }
+
+        public ActionResult Edit(int studentId)
+        {
+            var studentInDb = _context.Students.Single(n => n.Id == studentId);
+            
+            return View(studentInDb);
         }
     }
 }
