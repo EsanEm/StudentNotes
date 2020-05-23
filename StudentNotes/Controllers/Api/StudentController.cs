@@ -20,36 +20,41 @@ namespace StudentNotes.Controllers.Api
         {
             _context = new ApplicationDbContext();
         }
-
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
 
 
         // GET   /api/student
-        public IEnumerable<StudentDto> GetStudents()
+        public IHttpActionResult GetStudents()
         {
-            return _context.Students.ToList().Select(Mapper.Map<Student, StudentDto>);
+            var studentDto = _context.Students.ToList().Select(Mapper.Map<Student, StudentDto>);
+
+            return Ok(studentDto);
         }
 
 
         // GET   /api/student/id
-        public StudentDto GetStudent(int id)
+        public IHttpActionResult GetStudent(int id)
         {
             var student = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (student == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
-            return  Mapper.Map<Student, StudentDto>(student);
+            return Ok(Mapper.Map<Student, StudentDto>(student));
 
 
         }
 
         // POST    /api/student
         [HttpPost]
-        public StudentDto CreateStudent(StudentDto studentDto)
+        public IHttpActionResult CreateStudent(StudentDto studentDto)
         {
 
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var student = Mapper.Map<StudentDto, Student>(studentDto);
             _context.Students.Add(student);
@@ -57,42 +62,45 @@ namespace StudentNotes.Controllers.Api
 
             studentDto.Id = student.Id;
 
-            return studentDto;
+            return Created(new Uri(Request.RequestUri + "/" + student.Id), studentDto);
 
         }
 
 
         // PUT     /api/student/id
         [HttpPut]
-        public void UpdateStudent(int id, StudentDto studentDto)
+        public IHttpActionResult UpdateStudent(int id, StudentDto studentDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             Mapper.Map<StudentDto, Student>(studentDto, studentInDb);
             
 
             _context.SaveChanges();
 
+            return Ok();
         }
 
 
         // DELETE     /api/student/id
         [HttpDelete]
-        public void DeleteStudent(int id)
+        public IHttpActionResult DeleteStudent(int id)
         {
             var studentInDb = _context.Students.SingleOrDefault(s => s.Id == id);
 
             if (studentInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             _context.Students.Remove(studentInDb);
             _context.SaveChanges();
+
+            return Ok();
 
         }
     }
