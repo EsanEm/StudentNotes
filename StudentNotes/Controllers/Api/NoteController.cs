@@ -26,68 +26,73 @@ namespace StudentNotes.Controllers.Api
 
 
         // GET   /api/Note
-        public IEnumerable<NoteDto> GetNotes()
+        public IHttpActionResult GetNotes()
         {
-            return _context.Notes.ToList().Select(Mapper.Map<Note, NoteDto>);
+            var noteDto = _context.Notes.ToList().Select(Mapper.Map<Note, NoteDto>);
+            return Ok(noteDto);
         }
 
 
         // GET   /api/note/id
-        public NoteDto GetNote(int id)
+        public IHttpActionResult GetNote(int id)
         {
             var note = _context.Notes.SingleOrDefault(n => n.Id == id);
 
             if (note == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
-            return Mapper.Map<Note, NoteDto>(note);
+            return Ok(Mapper.Map<Note, NoteDto>(note));
         }
 
         // POST    /api/student
         [HttpPost]
-        public NoteDto CreateNote(NoteDto noteDto)
+        public IHttpActionResult CreateNote(NoteDto noteDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var note = Mapper.Map<NoteDto, Note>(noteDto);
             _context.Notes.Add(note);
             _context.SaveChanges();
 
             noteDto.Id = note.Id;
-            return noteDto;
+            return Created(new Uri(Request.RequestUri + "/" + note.Id), noteDto);
         }
 
 
         // PUT     /api/student/id
         [HttpPut]
-        public void UpdateNote(int id, NoteDto noteDto)
+        public IHttpActionResult UpdateNote(int id, NoteDto noteDto)
         {
             if (!ModelState.IsValid)
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
 
             var noteInDb = _context.Notes.Single(n => n.Id == id);
 
             if (noteInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             Mapper.Map<NoteDto, Note>(noteDto, noteInDb);
-            
+
             _context.SaveChanges();
+
+            return Ok();
         }
 
 
         // DELETE     /api/student/id
         [HttpDelete]
-        public void DeleteNote(int id)
+        public IHttpActionResult DeleteNote(int id)
         {
             var noteInDb = _context.Notes.SingleOrDefault(n => n.Id == id);
 
             if (noteInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
 
             _context.Notes.Remove(noteInDb);
             _context.SaveChanges();
+
+            return Ok();
         }
     }
 }
