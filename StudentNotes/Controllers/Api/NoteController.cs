@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
+using StudentNotes.Dtos;
 using StudentNotes.Models;
 
 namespace StudentNotes.Controllers.Api
@@ -24,40 +26,42 @@ namespace StudentNotes.Controllers.Api
 
 
         // GET   /api/Note
-        public IEnumerable<Note> GetNotes()
+        public IEnumerable<NoteDto> GetNotes()
         {
-            return _context.Notes.ToList();
+            return _context.Notes.ToList().Select(Mapper.Map<Note, NoteDto>);
         }
 
 
         // GET   /api/note/id
-        public Note GetNote(int id)
+        public NoteDto GetNote(int id)
         {
             var note = _context.Notes.SingleOrDefault(n => n.Id == id);
 
             if (note == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return note;
+            return Mapper.Map<Note, NoteDto>(note);
         }
 
         // POST    /api/student
         [HttpPost]
-        public Note CreateNote(Note note)
+        public NoteDto CreateNote(NoteDto noteDto)
         {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
 
+            var note = Mapper.Map<NoteDto, Note>(noteDto);
             _context.Notes.Add(note);
             _context.SaveChanges();
 
-            return note;
+            noteDto.Id = note.Id;
+            return noteDto;
         }
 
 
         // PUT     /api/student/id
         [HttpPut]
-        public void UpdateNote(int id, Note note)
+        public void UpdateNote(int id, NoteDto noteDto)
         {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -67,12 +71,8 @@ namespace StudentNotes.Controllers.Api
             if (noteInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            noteInDb.Name = note.Name;
-            noteInDb.ProgressRating = note.ProgressRating;
-            noteInDb.ExtraNote = note.ExtraNote;
-            noteInDb.DateAdded = note.DateAdded;
-            noteInDb.StudentId = note.StudentId;
-
+            Mapper.Map<NoteDto, Note>(noteDto, noteInDb);
+            
             _context.SaveChanges();
         }
 
